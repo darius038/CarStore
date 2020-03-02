@@ -14,7 +14,9 @@ namespace CarStore
                 UnikalusNumeris = Guid.NewGuid(),
                 PirkimoKaina = 2,
                 PardavimoKaina = 0,
-                PrekesTipas = PrekesTipasEnum.Maisto_Prekes
+                Likutis = 10,
+                PrekesTipas = PrekesTipasEnum.Maisto_Prekes,
+                imonePirkejas = new Imone() {Pavadinimas= "UAB Ankora", ImonesKodas = 123456}
             },
             new Preke
             {
@@ -22,7 +24,9 @@ namespace CarStore
                 UnikalusNumeris = Guid.NewGuid(),
                 PirkimoKaina = 4,
                 PardavimoKaina = 0,
-                PrekesTipas = PrekesTipasEnum.Buitines_Prekes
+                Likutis = 1,
+                PrekesTipas = PrekesTipasEnum.Buitines_Prekes,
+                imonePirkejas = new Imone() {Pavadinimas= "UAB Baltas miskas", ImonesKodas = 456789}
             },
             new Preke
             {
@@ -30,7 +34,9 @@ namespace CarStore
                 UnikalusNumeris = Guid.NewGuid(),
                 PirkimoKaina = 123,
                 PardavimoKaina = 0,
-                PrekesTipas = PrekesTipasEnum.Kitos_Prekes
+                Likutis = 7,
+                PrekesTipas = PrekesTipasEnum.Kitos_Prekes,
+                imonePirkejas = new Imone() {Pavadinimas= "UAB Zalia zole", ImonesKodas = 425587}
             }
         };
 
@@ -55,8 +61,8 @@ namespace CarStore
             _prekes.Find(x => x.Pavadinimas == pavadinimas).PirkimoKaina = kaina;
         }
 
-        //Prekes pardavimas - likucio sumazinimas
-        public static void ParduotiPreke(string pavadinimas, int kiekis, int kaina)
+        //Prekes pardavimas - likucio sumazinimas ir pirkejo ivedimas
+        public static void ParduotiPreke(string pavadinimas, int kiekis, int kaina, int pirkejoKodas)
         {
             if (!_prekes.Exists(x => x.Pavadinimas.Equals(pavadinimas)))
             {
@@ -64,16 +70,34 @@ namespace CarStore
             }
             else if (_prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis >= kiekis)
             {
-                _prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis -= kiekis;
-                _prekes.Find(x => x.Pavadinimas == pavadinimas).PardavimoKaina = kaina;
+
+
+                var pirkejas = ImonesRepository.IeskotiImone(pirkejoKodas);
+                if (pirkejas == null)
+                {
+                    Console.WriteLine("Tokio pirkejo nera kataloge, iveskite pirkeja!");
+                    return;
+                }
+                else
+                {
+                    _prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis -= kiekis;
+                    _prekes.Find(x => x.Pavadinimas == pavadinimas).PardavimoKaina = kaina;
+                    _prekes.Find(x => x.Pavadinimas == pavadinimas).imonePirkejas = pirkejas;
+
+                }
+
             }
-            throw new Exception("Prekes likutis nepakankamas!");
+            else
+            {
+                throw new Exception("Prekes likutis nepakankamas!");
+            } 
+            
         }
 
         //Prekes paieska
-        public static List<Preke> IeskotiPreke(string pavadinimas)
+        public static Preke IeskotiPreke(string pavadinimas)
         {
-            List<Preke> rastosPrekes;
+            Preke rastaPreke;
 
             if (!_prekes.Exists(x => x.Pavadinimas.Equals(pavadinimas)))
             {
@@ -81,9 +105,9 @@ namespace CarStore
             }
             else
             {
-                rastosPrekes = _prekes.FindAll(x => x.Pavadinimas == pavadinimas);
+                rastaPreke = _prekes.Find(x => x.Pavadinimas == pavadinimas);
             }
-            return rastosPrekes;
+            return rastaPreke;
         }
 
         public static List<Preke> GetPrekesKatalogas()

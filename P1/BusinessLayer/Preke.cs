@@ -12,5 +12,6 @@ namespace CarStore
         public int PardavimoKaina { get; set; }
         public int Likutis { get; set; }
         public PrekesTipasEnum PrekesTipas { get; set; }
+        public Imone imonePirkejas { get; set; }
     }
 }

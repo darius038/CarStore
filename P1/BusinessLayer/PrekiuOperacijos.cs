@@ -20,10 +20,10 @@ namespace CarStore
             PrekesRepository.PirktiPreke(pavadinimas, kiekis, kaina);
         }
 
-        public static void PrekesPardavimas(string pavadinimas, int kiekis, int kaina)
+        public static void PrekesPardavimas(string pavadinimas, int kiekis, int kaina, int pirkejoKodas)
         {
             //pakeiciamas parduodamos prekes likutis duomenu bazeje
-            PrekesRepository.ParduotiPreke(pavadinimas, kiekis, kaina);
+            PrekesRepository.ParduotiPreke(pavadinimas, kiekis, kaina, pirkejoKodas);
         }        
 
         public static List<Preke> PrekiuKatalogas()
@@ -32,10 +32,11 @@ namespace CarStore
             return PrekesRepository.GetPrekesKatalogas();
         }
 
-        public static List<Preke> PrekiuPaieska(string pavadinimas)
+        public static Preke PrekiuPaieska(string pavadinimas)
         {
             //pasiimame is DB
             return PrekesRepository.IeskotiPreke(pavadinimas);
         }
+       
     }
 }

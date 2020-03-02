@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace CarStore
 {
@@ -19,7 +17,7 @@ namespace CarStore
             isStarted = true;
         }
 
-        //Interfeiso paleidimas
+        //UI paleidimas
         public void Start()
         {
             int pasirinkimas;
@@ -37,6 +35,8 @@ namespace CarStore
                     case 4: PrekiuPaieska(); break;
                     case 5: PrekiuKatalogas(); break;
                     case 6: PrekesPirkimas(); break;
+                    case 7: ImonesIvedimas(); break;
+                    case 8: ImonesPaieska(); break;
                     default:
                         break;
                 }
@@ -52,14 +52,17 @@ namespace CarStore
 
             do
             {
+                Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 Console.WriteLine("1 - Naujos prekes ivedimas");
                 Console.WriteLine("2 - Prekes pirkimas");
                 Console.WriteLine("3 - Prekes pardavimas");
                 Console.WriteLine("4 - Prekes paieska");
                 Console.WriteLine("5 - Prekiu katalogas");
                 Console.WriteLine("6 - Sandelio likutis");
+                Console.WriteLine("7 - Imones / Pirkejo ivedimas");
+                Console.WriteLine("8 - Imones / Pirkejo paieska");
                 Console.WriteLine("9 - Isejimas is programos");
-
+                Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 vartotojoIvestis = Console.ReadLine();
 
             } while (!int.TryParse(vartotojoIvestis, out pasirinkimas));
@@ -67,7 +70,7 @@ namespace CarStore
             return pasirinkimas;
         }
 
-        //***1 - Naujos prekes ivedimas
+        //********** 1 - Naujos prekes ivedimas
         private void NaujosPrekesIvedimas()
         {
             Console.WriteLine("Iveskite prekes duomenis");
@@ -75,10 +78,6 @@ namespace CarStore
             //Pavadinimas
             Console.WriteLine("Prekes pavadinimas:");
             var pavadinimas = Console.ReadLine();
-
-            //Pirkimo kaina
-            Console.WriteLine("Pirkimo kaina:");
-            int kainaPirkimo = int.Parse(Console.ReadLine());
 
             //Prekes tipas pagal enum  
             int tipas;
@@ -97,7 +96,6 @@ namespace CarStore
             var naujaPreke = new Preke()
             {
                 Pavadinimas = pavadinimas,
-                PirkimoKaina = kainaPirkimo,
                 PrekesTipas = (PrekesTipasEnum)tipas
             };
 
@@ -105,7 +103,7 @@ namespace CarStore
             PrekiuOperacijos.NaujaPreke(naujaPreke);
         }
 
-        //***2 - prekes pirkimas, t.y. esamos prekes likucio padidinimas
+        //********** 2 - prekes pirkimas, t.y. esamos prekes likucio padidinimas
         private void PrekesPirkimas()
         {
             Console.WriteLine("Iveskite perkamos prekes duomenis");
@@ -121,23 +119,34 @@ namespace CarStore
             PrekiuOperacijos.PrekesPirkimas(pavadinimas, perkamasKiekis, pirkimoKaina);
         }
 
-        //***3 - prekes pardavimas, t.y. esamos prekes likucio padidinimas
+        //********** 3 - prekes pardavimas, likucio sumazinimas ir pirkejo ivedimas
         private void PrekesPardavimas()
         {
             Console.WriteLine("Iveskite parduodamos prekes duomenis");
-            Console.WriteLine("Iveskite pavadinima: ");
+            Console.WriteLine("Iveskite pavadinima:");
             var pavadinimas = Console.ReadLine();
 
-            Console.WriteLine("Iveskite pardavimo kaina");
+            Console.WriteLine("Iveskite pardavimo kaina:");
             int pardavimoKaina = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Iveskite parduodama kieki");
+            Console.WriteLine("Iveskite parduodama kieki:");
             int parduodamasKiekis = int.Parse(Console.ReadLine());
 
-            PrekiuOperacijos.PrekesPardavimas(pavadinimas, parduodamasKiekis, pardavimoKaina);
+            Console.WriteLine("Iveskite pirkejo/imones koda;");
+            int pirkejoKodas = int.Parse(Console.ReadLine());
+
+            try
+            {
+                PrekiuOperacijos.PrekesPardavimas(pavadinimas, parduodamasKiekis, pardavimoKaina, pirkejoKodas);
+                Console.WriteLine("Pardavimo operacija sekmingai ivesta");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
-        //***4 - prekes paieska
+        //********** 4 - prekes paieska
         private void PrekiuPaieska()
         {
             Console.WriteLine("-------Prekes paieska pagal pavadinima-------");
@@ -146,21 +155,19 @@ namespace CarStore
 
             try
             {
-                List<Preke> rastosPrekes = PrekiuOperacijos.PrekiuPaieska(pavadinimas);
+                Preke preke = PrekiuOperacijos.PrekiuPaieska(pavadinimas);
 
-                Console.WriteLine("Rastos prekes: ");
-                foreach (var preke in rastosPrekes)
+                Console.WriteLine("Rasta preke: ");
+
+                var pType = preke.GetType();
+                var props = pType.GetProperties();
+                foreach (PropertyInfo prp in props)
                 {
-                    var pType = preke.GetType();
-                    var props = pType.GetProperties();
-                    foreach (PropertyInfo prp in props)
-                    {
-                        string propertyName = prp.Name;
-                        string propertyValue = prp.GetValue(preke, new object[] { }).ToString();
-                        Console.Write(propertyName + ": " + propertyValue + ";  ");
-                    }
-                    Console.WriteLine();
+                    string propertyName = prp.Name;
+                    string propertyValue = prp.GetValue(preke, new object[] { }).ToString();
+                    Console.Write(propertyName + ": " + propertyValue + ";  ");
                 }
+                Console.WriteLine();
             }
             catch (Exception ex)
             {
@@ -169,7 +176,7 @@ namespace CarStore
 
         }
 
-        //***5 - prekiu katalogas
+        //********** 5 - prekiu katalogas
         private void PrekiuKatalogas()
         {
             Console.WriteLine("-------Prekiu Katalogas-------");
@@ -186,6 +193,46 @@ namespace CarStore
                 }
                 Console.WriteLine();
             }
+        }
+
+        //********** 6 - naujos imones ivedimas
+        private void ImonesIvedimas()
+        {
+            Console.WriteLine("-------Naujos Imones ivedimas i kataloga-------");
+            Console.WriteLine("Imones pavadinimas: ");
+            string pavadinimas = Console.ReadLine();
+            Console.WriteLine("Imones kodas: ");
+            int kodas = int.Parse(Console.ReadLine());
+
+            //Naujos imones sukurimas
+            var naujaImone = new Imone()
+            {
+                Pavadinimas = pavadinimas,
+                ImonesKodas = kodas
+            };
+
+            //Naujos imones itraukimas i kataloga
+            ImonesOperacijos.NaujaImone(naujaImone);
+
+        }
+        //********** 7 - imones paieska pagal koda
+        private void ImonesPaieska()
+        {
+            Console.WriteLine("-------Imones paieska pagal koda-------");
+            Console.WriteLine("Iveskite imones koda: ");
+            int kodas = int.Parse(Console.ReadLine());
+
+            try
+            {
+                Imone rastaImone = ImonesOperacijos.ImoniuPaieska(kodas);
+                Console.WriteLine("Rasta imone: ");
+                Console.WriteLine(rastaImone.Pavadinimas + ", imones kodas: " + rastaImone.ImonesKodas);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
 
     }

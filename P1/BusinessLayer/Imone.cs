@@ -7,6 +7,13 @@ namespace CarStore
     class Imone
     {
         public string Pavadinimas { get; set; }
-        public int ImonesKodas { get; set; }        
+        public int ImonesKodas { get; set; }
+
+        public override string ToString()
+        {
+            return Pavadinimas + " kodas: " + ImonesKodas;
+        }
     }
+
+    
 }

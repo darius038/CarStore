@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace P1
+namespace CarStore
 {
     public enum PrekesTipasEnum
     {
-        TransportoPriemone = 1,
-        MaistoPreke = 2
+        Transporto_Priemones = 1,
+        Maisto_Prekes = 2,
+        Buitines_Prekes = 3
     }
 }

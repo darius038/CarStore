@@ -8,6 +8,7 @@ namespace CarStore
     {
         Transporto_Priemones = 1,
         Maisto_Prekes = 2,
-        Buitines_Prekes = 3
+        Buitines_Prekes = 3,
+        Kitos_Prekes = 4
     }
 }

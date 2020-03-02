@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace P1
+namespace CarStore
 {
     class Program
     {

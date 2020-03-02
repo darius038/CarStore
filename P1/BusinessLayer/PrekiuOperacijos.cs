@@ -12,27 +12,30 @@ namespace CarStore
             //issaugome nauja preke duomenu bazeje
             naujaPreke.UnikalusNumeris = Guid.NewGuid();
             PrekesRepository.IdetiNauja(naujaPreke);
-
         }
 
-        public static void PrekesPirkimas(Preke preke, int kiekis)
+        public static void PrekesPirkimas(String pavadinimas, int kiekis, int kaina)
         {
-            //pakeiciamas prekes likutis duomenu bazeje
-            PrekesRepository.PirktiPreke(preke, kiekis);
-
+            //pakeiciamas perkamos prekes likutis duomenu bazeje
+            PrekesRepository.PirktiPreke(pavadinimas, kiekis, kaina);
         }
 
-        public static void PrekesPardavimas(Preke preke, int kiekis)
+        public static void PrekesPardavimas(string pavadinimas, int kiekis, int kaina)
         {
-            //pakeiciamas prekes likutis duomenu bazeje
-            PrekesRepository.ParduotiPreke(preke, kiekis);
-
+            //pakeiciamas parduodamos prekes likutis duomenu bazeje
+            PrekesRepository.ParduotiPreke(pavadinimas, kiekis, kaina);
         }        
 
         public static List<Preke> PrekiuKatalogas()
         {
             //pasiimame is DB
             return PrekesRepository.GetPrekesKatalogas();
+        }
+
+        public static List<Preke> PrekiuPaieska(string pavadinimas)
+        {
+            //pasiimame is DB
+            return PrekesRepository.IeskotiPreke(pavadinimas);
         }
     }
 }

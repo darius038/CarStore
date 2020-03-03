@@ -11,6 +11,7 @@ namespace CarStore
         {
             //issaugome nauja preke duomenu bazeje
             naujaPreke.UnikalusNumeris = Guid.NewGuid();
+            naujaPreke.imonePirkejas = new Imone();
             PrekesRepository.IdetiNauja(naujaPreke);
         }
 

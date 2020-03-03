@@ -70,9 +70,8 @@ namespace CarStore
             }
             else if (_prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis >= kiekis)
             {
-
-
                 var pirkejas = ImonesRepository.IeskotiImone(pirkejoKodas);
+
                 if (pirkejas == null)
                 {
                     Console.WriteLine("Tokio pirkejo nera kataloge, iveskite pirkeja!");
@@ -83,15 +82,12 @@ namespace CarStore
                     _prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis -= kiekis;
                     _prekes.Find(x => x.Pavadinimas == pavadinimas).PardavimoKaina = kaina;
                     _prekes.Find(x => x.Pavadinimas == pavadinimas).imonePirkejas = pirkejas;
-
                 }
-
             }
             else
             {
                 throw new Exception("Prekes likutis nepakankamas!");
-            } 
-            
+            }             
         }
 
         //Prekes paieska

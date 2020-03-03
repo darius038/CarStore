@@ -1,6 +1,7 @@
-# CarStore - prekiu ir pirkeju valdymo sistema. .NET namu darbas
+# CarStore - prekiu ir pirkeju valdymo sistema
+.NET namu darbas
 
-MENIU
+PROGRAMOS MENIU
 
 1 - Naujos prekes ivedimas
 2 - Prekes pirkimas               

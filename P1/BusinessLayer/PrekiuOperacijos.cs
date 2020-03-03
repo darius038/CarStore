@@ -5,8 +5,7 @@ using System.Text;
 namespace CarStore
 {
     static class PrekiuOperacijos
-    {
-        
+    {        
         public static void NaujaPreke(Preke naujaPreke)
         {
             //issaugome nauja preke duomenu bazeje
@@ -37,7 +36,6 @@ namespace CarStore
         {
             //pasiimame is DB
             return PrekesRepository.IeskotiPreke(pavadinimas);
-        }
-       
+        }       
     }
 }

@@ -201,7 +201,6 @@ namespace CarStore
             Console.WriteLine("____Prekiu Katalogas____________");
             foreach (var preke in PrekiuOperacijos.PrekiuKatalogas())
             {
-
                 var pType = preke.GetType();
                 var props = pType.GetProperties();
                 foreach (PropertyInfo prp in props)
@@ -243,7 +242,6 @@ namespace CarStore
             //Naujos imones itraukimas i kataloga
             ImonesOperacijos.NaujaImone(naujaImone);
             Console.WriteLine("Nauja imone sekmingai itraukta i kataloga");
-
         }
 
         //********** 8 - imones paieska pagal koda

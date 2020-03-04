@@ -10,5 +10,5 @@ PROGRAMOS MENIU
 5 - Prekiu katalogas    
 6 - Sandelio likutis    
 7 - Imones / Pirkejo ivedimas 
-8 - Imones / Pirkejo paieska  
+8 - Imones / Pirkejo paieska               
 9 - Isejimas is programos               

@@ -1,4 +1,4 @@
-# CarStore - prekiu ir pirkeju valdymo sistema
+# CarStore - prekiu sandelio valdymo sistema
 .NET namu darbas
 
 PROGRAMOS MENIU
@@ -9,6 +9,6 @@ PROGRAMOS MENIU
 4 - Prekes paieska             
 5 - Prekiu katalogas    
 6 - Sandelio likutis    
-7 - Imones / Pirkejo ivedimas 
+7 - Imones / Pirkejo ivedimas               
 8 - Imones / Pirkejo paieska               
 9 - Isejimas is programos               

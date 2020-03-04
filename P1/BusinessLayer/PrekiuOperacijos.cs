@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CarStore
 {
     static class PrekiuOperacijos
-    {        
+    {
         public static void NaujaPreke(Preke naujaPreke)
         {
             //issaugome nauja preke duomenu bazeje
-            naujaPreke.UnikalusNumeris = Guid.NewGuid();
-            naujaPreke.imonePirkejas = new Imone();
+            naujaPreke.UnikalusNumeris = Guid.NewGuid().ToString();
             PrekesRepository.IdetiNauja(naujaPreke);
         }
 
@@ -24,7 +22,7 @@ namespace CarStore
         {
             //pakeiciamas parduodamos prekes likutis duomenu bazeje
             PrekesRepository.ParduotiPreke(pavadinimas, kiekis, kaina, pirkejoKodas);
-        }        
+        }
 
         public static List<Preke> PrekiuKatalogas()
         {
@@ -36,6 +34,6 @@ namespace CarStore
         {
             //pasiimame is DB
             return PrekesRepository.IeskotiPreke(pavadinimas);
-        }       
+        }
     }
 }

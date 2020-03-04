@@ -6,6 +6,7 @@ namespace CarStore
 {
     public enum PrekesTipasEnum
     {
+        Nera_Tipo = 0,
         Transporto_Priemones = 1,
         Maisto_Prekes = 2,
         Buitines_Prekes = 3,

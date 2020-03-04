@@ -3,51 +3,53 @@ using System.Collections.Generic;
 
 namespace CarStore
 {
-    static class PrekesRepository
+    public static class PrekesRepository
     {
-        private static List<Preke> _prekes = new List<Preke>
+
+        private static List<Preke> prekes = new List<Preke>();
+
+        private static string _fileName = "prekes.xml";
+
+        private static List<Preke> _prekes
         {
-            //Listo uzpildymas
-            new Preke
+            get
             {
-                Pavadinimas = "Juoda duona",
-                UnikalusNumeris = Guid.NewGuid(),
-                PirkimoKaina = 2,
-                PardavimoKaina = 0,
-                Likutis = 10,
-                PrekesTipas = PrekesTipasEnum.Maisto_Prekes,
-                imonePirkejas = new Imone() {Pavadinimas= "UAB Ankora", ImonesKodas = 123456}
-            },
-            new Preke
-            {
-                Pavadinimas = "Valiklis",
-                UnikalusNumeris = Guid.NewGuid(),
-                PirkimoKaina = 4,
-                PardavimoKaina = 0,
-                Likutis = 1,
-                PrekesTipas = PrekesTipasEnum.Buitines_Prekes,
-                imonePirkejas = new Imone() {Pavadinimas= "UAB Baltas miskas", ImonesKodas = 456789}
-            },
-            new Preke
-            {
-                Pavadinimas = "Stalas",
-                UnikalusNumeris = Guid.NewGuid(),
-                PirkimoKaina = 123,
-                PardavimoKaina = 0,
-                Likutis = 7,
-                PrekesTipas = PrekesTipasEnum.Kitos_Prekes,
-                imonePirkejas = new Imone() {Pavadinimas= "UAB Zalia zole", ImonesKodas = 425587}
+                //Nuskaityti faila ir desiarilizuoti                
+                var failoSaugojimoPrietaisas = new SaveToFile();
+                try
+                {
+                    prekes = failoSaugojimoPrietaisas.DeSerializeObject<List<Preke>>(_fileName);
+                }
+                catch (Exception)
+                {
+                    //jei failo nera ar klaida sukurit tuscia masyva
+                    prekes = new List<Preke>();
+                }
+                return prekes;
             }
-        };
+            set
+            {
+                // serializuoti objekta ir irasyti i faila
+                prekes = value;
+            }
+        }
+
+        //Saugojimo metodas
+        private static void Save()
+        {
+            var failoSaugojimoPrietaisas = new SaveToFile();
+            failoSaugojimoPrietaisas.SerializeObject<List<Preke>>(prekes, _fileName);
+        }
 
         //Naujos prekes idejimas
         public static void IdetiNauja(Preke preke)
         {
-            if (_prekes.Exists(x => x.UnikalusNumeris == preke.UnikalusNumeris))
+            if (_prekes.Exists(x => x.UnikalusNumeris.Equals(preke.UnikalusNumeris)))
             {
                 throw new Exception("Tokia preke siuo numeriu jau egzistuoja");
             }
             _prekes.Add(preke);
+            Save();
         }
 
         //Prekes pirkimas - likucio padidinimas
@@ -57,8 +59,18 @@ namespace CarStore
             {
                 throw new Exception("Tokios prekes nera sarase");
             }
-            _prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis += kiekis;
-            _prekes.Find(x => x.Pavadinimas == pavadinimas).PirkimoKaina = kaina;
+            else
+            {
+                //_prekes.Select(x => x.Pavadinimas = pavadinimas).Likutis = kiekis;
+                //_prekes.Find(x => x.Pavadinimas.Equals(pavadinimas)).PirkimoKaina = kaina;
+
+                Preke p = _prekes.Find(x => x.Pavadinimas == pavadinimas);
+                p.Likutis += kiekis;
+                p.PirkimoKaina = kaina;
+
+                Save();
+            }
+
         }
 
         //Prekes pardavimas - likucio sumazinimas ir pirkejo ivedimas
@@ -68,7 +80,7 @@ namespace CarStore
             {
                 throw new Exception("Tokios prekes nera sarase");
             }
-            else if (_prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis >= kiekis)
+            else if (_prekes.Find(x => x.Pavadinimas.Equals(pavadinimas)).Likutis >= kiekis)
             {
                 var pirkejas = ImonesRepository.IeskotiImone(pirkejoKodas);
 
@@ -79,15 +91,18 @@ namespace CarStore
                 }
                 else
                 {
-                    _prekes.Find(x => x.Pavadinimas == pavadinimas).Likutis -= kiekis;
-                    _prekes.Find(x => x.Pavadinimas == pavadinimas).PardavimoKaina = kaina;
-                    _prekes.Find(x => x.Pavadinimas == pavadinimas).imonePirkejas = pirkejas;
+                    Preke p = _prekes.Find(x => x.Pavadinimas == pavadinimas);
+                    p.Likutis -= kiekis;
+                    p.PardavimoKaina = kaina;
+                    p.pirkejoImonesKodas = pirkejoKodas;
+
+                    Save();
                 }
             }
             else
             {
                 throw new Exception("Prekes likutis nepakankamas!");
-            }             
+            }
         }
 
         //Prekes paieska
@@ -95,7 +110,7 @@ namespace CarStore
         {
             Preke rastaPreke;
 
-            if (!_prekes.Exists(x => x.Pavadinimas.Equals(pavadinimas)))
+            if (!_prekes.Exists(x => x.Pavadinimas.Contains(pavadinimas)))
             {
                 throw new Exception("Tokios prekes nera sarase");
             }

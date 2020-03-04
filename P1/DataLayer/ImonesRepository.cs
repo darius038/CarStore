@@ -3,24 +3,44 @@ using System.Collections.Generic;
 
 namespace CarStore
 {
-    class ImonesRepository
+    public class ImonesRepository
     {
-        private static List<Imone> _imones = new List<Imone>()
+        private static string _fileName = "imones.xml";
+
+        private static List<Imone> imones = new List<Imone>();
+
+        private static List<Imone> _imones
+        {
+            get
             {
-            //Listo uzpildymas
-            new Imone
-            {
-                Pavadinimas = "UAB Apuoko lizdas",
-                ImonesKodas = 123456
-            },
-            new Imone
-             {
-                Pavadinimas = "UAB Baltas namas",
-                ImonesKodas = 987456
+                //Nuskaityti faila ir desiarilizuoti                
+                var failoSaugojimoPrietaisas = new SaveToFile();
+                try
+                {
+                    imones = failoSaugojimoPrietaisas.DeSerializeObject<List<Imone>>(_fileName);
+                }
+                catch (Exception)
+                {
+                    //jei failo nera ar klaida sukurit tuscia masyva
+                    imones = new List<Imone>();
+                }
+                return imones;
             }
-        };
+            set
+            {
+                // serializuoti objekta ir irasyti i faila
+                imones = value;
+            }
+        }
 
+        //Saugojimo metodas
+        private static void Save()
+        {
+            var failoSaugojimoPrietaisas = new SaveToFile();
+            failoSaugojimoPrietaisas.SerializeObject<List<Imone>>(imones, _fileName);
+        }
 
+        //Naujos imones ivedimas i kataloga
         public static void IvestiImone(Imone imone)
         {
             if (_imones.Exists(x => x.ImonesKodas == imone.ImonesKodas))
@@ -29,6 +49,8 @@ namespace CarStore
             }
 
             _imones.Add(imone);
+            Save();
+           
         }
 
         //Imones paieska pagal koda

@@ -110,7 +110,7 @@ namespace CarStore
         {
             Console.WriteLine("Iveskite perkamos prekes duomenis");
             Console.WriteLine("Iveskite pavadinima: ");
-            var pavadinimas = Console.ReadLine();
+            string pavadinimas = Console.ReadLine();
 
             Console.WriteLine("Iveskite pirkimo kaina");
             int pirkimoKaina = int.Parse(Console.ReadLine());
@@ -147,10 +147,10 @@ namespace CarStore
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Console.WriteLine("Patikrinkite ivedamus duomenis");
                 PrekesPardavimas();
             }
-
             try
             {
                 PrekiuOperacijos.PrekesPardavimas(pavadinimas, parduodamasKiekis, pardavimoKaina, pirkejoKodas);
@@ -169,7 +169,7 @@ namespace CarStore
         //********** 4 - prekes paieska
         private void PrekiuPaieska()
         {
-            Console.WriteLine("____Prekes paieska pagal pavadinima_________");
+            Console.WriteLine("____Prekes paieska pagal pavadinima____");
             Console.WriteLine("Iveskite prekes pavadinima: ");
             var pavadinimas = Console.ReadLine();
 
@@ -198,7 +198,7 @@ namespace CarStore
         //********** 5 - prekiu katalogas
         private void PrekiuKatalogas()
         {
-            Console.WriteLine("____Prekiu Katalogas____________");
+            Console.WriteLine("____Prekiu Katalogas____");
             foreach (var preke in PrekiuOperacijos.PrekiuKatalogas())
             {
                 var pType = preke.GetType();
@@ -216,17 +216,17 @@ namespace CarStore
         //********** 6 - sandelio likutis
         private void SandelioLikutis()
         {
-            Console.WriteLine("____Sandelio likutis____________");
+            Console.WriteLine("____Sandelio likutis____");
             foreach (var preke in PrekiuOperacijos.PrekiuKatalogas())
             {
-                Console.WriteLine("Kodas: "+preke.UnikalusNumeris + " " + preke.Pavadinimas + " Likutis (vnt.): " + preke.Likutis);
+                Console.WriteLine("Kodas: " + preke.UnikalusNumeris + " " + preke.Pavadinimas + " Likutis (vnt.): " + preke.Likutis);
             }
         }
 
         //********** 7 - naujos imones ivedimas
         private void ImonesIvedimas()
         {
-            Console.WriteLine("____Naujos Imones ivedimas i kataloga_________");
+            Console.WriteLine("____Naujos Imones ivedimas i kataloga____");
             Console.WriteLine("Imones pavadinimas: ");
             string pavadinimas = Console.ReadLine();
             Console.WriteLine("Imones kodas: ");
@@ -247,7 +247,7 @@ namespace CarStore
         //********** 8 - imones paieska pagal koda
         private void ImonesPaieska()
         {
-            Console.WriteLine("_____Imones paieska pagal koda___________");
+            Console.WriteLine("_____Imones paieska pagal koda____");
             Console.WriteLine("Iveskite imones koda: ");
             int kodas = int.Parse(Console.ReadLine());
 
@@ -257,10 +257,10 @@ namespace CarStore
                 Console.WriteLine("Rasta imone: ");
                 Console.WriteLine(rastaImone);
                 Console.WriteLine("Imones operacijos: ");
-                var imones = PrekiuOperacijos.PrekiuKatalogas().FindAll((x => x.imonePirkejas.ImonesKodas == kodas));
+                var imones = PrekiuOperacijos.PrekiuKatalogas().FindAll((x => x.pirkejoImonesKodas == kodas));
                 foreach (var item in imones)
                 {
-                    Console.WriteLine("Pirko: "+item.Pavadinimas + ", pardavimo kaina: " + item.PardavimoKaina);
+                    Console.WriteLine("Pirko: " + item.Pavadinimas + ", pardavimo kaina: " + item.PardavimoKaina);
                 }
             }
             catch (Exception ex)
